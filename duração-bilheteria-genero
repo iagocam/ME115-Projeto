@@ -1,0 +1,23 @@
+filmes <- load("filmes_1_ate_5180")
+
+genero <- list()
+for (i in 1:nrow(filmesIMDB)){
+  a <- strsplit(filmesIMDB[i, 6], ",")
+  genero <- append(genero, a[[1]][1])
+}
+
+genero
+
+filmesIMDB$Genre <- genero
+
+dur <- list()
+filmesIMDB$filmeDomGross <- as.numeric(gsub(",","",filmesIMDB$filmeDomGross))
+filmesIMDB$Year <- as.numeric(filmesIMDB$Year)
+for (i in 1:nrow(filmesIMDB)){
+  a <- strsplit(filmesIMDB[i, 5], " ")
+  dur <- append(dur, a[[1]][1])
+}
+
+filmesIMDB$Runtime <- as.numeric(dur)
+
+ggplot(filmesIMDB, aes(filmesIMDB$Runtime, filmesIMDB$filmeDomGross, col = as.factor(unlist(Genre)), alpha = 0.4))  + geom_point() + coord_cartesian(xlim = c(0:250)) + facet_grid( . ~ as.factor(unlist(Genre)))
